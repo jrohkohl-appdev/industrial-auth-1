@@ -8,6 +8,9 @@ class FollowRequestsController < ApplicationController
 
   # GET /follow_requests/1 or /follow_requests/1.json
   def show
+    if @follow_request.recipient != current_user && @follow_request.sender != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    end
   end
 
   # GET /follow_requests/new

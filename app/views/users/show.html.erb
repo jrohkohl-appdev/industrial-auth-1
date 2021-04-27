@@ -12,7 +12,7 @@
 
 
 
-<% if @user.followers.exclude?(current_user) && @user.private == true %>
+<% if @user.followers.exclude?(current_user) && @user.private == true && @user != current_user %>
 
   <div class="row mb-4">
     <div class="col-md-6 offset-md-3">

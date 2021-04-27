@@ -8,11 +8,14 @@ class LikesController < ApplicationController
 
   # GET /likes/1 or /likes/1.json
   def show
+    if @like.fan != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    end
   end
 
   # GET /likes/new
   def new
-    @like = Like.new
+    @like = Like.new                             
   end
 
   # GET /likes/1/edit

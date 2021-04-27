@@ -8,7 +8,7 @@ class PhotosController < ApplicationController
 
   # GET /photos/1 or /photos/1.json
   def show
-    if @photo.owner.followers.include?(current_user)
+    if @photo.owner.followers.exclude?(current_user) && @photo.owner != current_user
       redirect_back fallback_location: root_url, alert: "nice try"
     end
   end
