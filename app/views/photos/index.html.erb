@@ -1,6 +1,10 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Photos</h1>
+<h1 class = "display-4">Photos</h1>
+<h6>Photos from users I follow</h6>
+
+<hr>
+
 
 <table>
   <thead>
@@ -16,16 +20,19 @@
 
   <tbody>
     <% @photos.each do |photo| %>
-      <tr>
-        <td><%= photo.image %></td>
-        <td><%= photo.comments_count %></td>
-        <td><%= photo.likes_count %></td>
-        <td><%= photo.caption %></td>
-        <td><%= photo.owner_id %></td>
-        <td><%= link_to 'Show', photo %></td>
-        <td><%= link_to 'Edit', edit_photo_path(photo) %></td>
-        <td><%= link_to 'Destroy', photo, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <% if photo.owner.followers.include?(current_user) || photo.owner == current_user %>
+        <tr>
+          <td><%= link_to "Link", photo_path(photo) %></td>
+          <td><%= photo.comments_count %></td>
+          <td><%= photo.likes_count %></td>
+          <td><%= photo.caption %></td>
+          <td><%= photo.owner.username %></td>
+          <% if photo.owner == current_user %>
+            <td><%= link_to 'Edit', edit_photo_path(photo) %></td>
+            <td><%= link_to 'Destroy', photo, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

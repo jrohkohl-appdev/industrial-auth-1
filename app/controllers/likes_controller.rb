@@ -8,15 +8,21 @@ class LikesController < ApplicationController
 
   # GET /likes/1 or /likes/1.json
   def show
+    if @like.fan != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    end
   end
 
   # GET /likes/new
   def new
-    @like = Like.new
+    @like = Like.new                             
   end
 
   # GET /likes/1/edit
   def edit
+    if @like.fan != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    end
   end
 
   # POST /likes or /likes.json
@@ -36,23 +42,31 @@ class LikesController < ApplicationController
 
   # PATCH/PUT /likes/1 or /likes/1.json
   def update
-    respond_to do |format|
-      if @like.update(like_params)
-        format.html { redirect_to @like, notice: "Like was successfully updated." }
-        format.json { render :show, status: :ok, location: @like }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @like.errors, status: :unprocessable_entity }
+    if @like.fan != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    else
+      respond_to do |format|
+        if @like.update(like_params)
+          format.html { redirect_to @like, notice: "Like was successfully updated." }
+          format.json { render :show, status: :ok, location: @like }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @like.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
   # DELETE /likes/1 or /likes/1.json
   def destroy
-    @like.destroy
-    respond_to do |format|
-      format.html { redirect_to likes_url, notice: "Like was successfully destroyed." }
-      format.json { head :no_content }
+    if @like.fan != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    else
+      @like.destroy
+      respond_to do |format|
+        format.html { redirect_to likes_url, notice: "Like was successfully destroyed." }
+        format.json { head :no_content }
+      end
     end
   end
 

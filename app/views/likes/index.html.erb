@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Likes</h1>
+<h1 class = "display-4">Likes</h1>
+<h6>My Likes</h6>
 
 <table>
   <thead>
@@ -13,13 +14,15 @@
 
   <tbody>
     <% @likes.each do |like| %>
-      <tr>
-        <td><%= like.fan_id %></td>
-        <td><%= like.photo_id %></td>
-        <td><%= link_to 'Show', like %></td>
-        <td><%= link_to 'Edit', edit_like_path(like) %></td>
-        <td><%= link_to 'Destroy', like, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <% if like.fan == current_user %>
+        <tr>
+          <td><%= like.fan_id %></td>
+          <td><%= like.photo_id %></td>
+          <td><%= link_to 'Show', like %></td>
+          <td><%= link_to 'Edit', edit_like_path(like) %></td>
+          <td><%= link_to 'Destroy', like, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
