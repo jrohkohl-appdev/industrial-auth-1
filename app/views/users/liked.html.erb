@@ -10,10 +10,23 @@
   </div>
 </div>
 
-<% @user.liked_photos.each do |photo| %>
+<% if @user.followers.exclude?(current_user) && @user.private == true %>
+
   <div class="row mb-4">
     <div class="col-md-6 offset-md-3">
-      <%= render "photos/photo", photo: photo %>
+      <p class="lead text-center">
+        Follow <% @user.username %> to see photos
+      </p>
     </div>
   </div>
+
+<% else %>
+
+  <% @user.liked_photos.each do |photo| %>
+    <div class="row mb-4">
+      <div class="col-md-6 offset-md-3">
+        <%= render "photos/photo", photo: photo %>
+      </div>
+    </div>
+  <% end %>
 <% end %>

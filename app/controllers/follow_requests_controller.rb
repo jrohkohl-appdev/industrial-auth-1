@@ -17,6 +17,9 @@ class FollowRequestsController < ApplicationController
 
   # GET /follow_requests/1/edit
   def edit
+    if @follow_request.recipient != current_user && @follow_request.sender != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    end
   end
 
   # POST /follow_requests or /follow_requests.json
@@ -37,23 +40,31 @@ class FollowRequestsController < ApplicationController
 
   # PATCH/PUT /follow_requests/1 or /follow_requests/1.json
   def update
-    respond_to do |format|
-      if @follow_request.update(follow_request_params)
-        format.html { redirect_back fallback_location: root_url, notice: "Follow request was successfully updated." }
-        format.json { render :show, status: :ok, location: @follow_request }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @follow_request.errors, status: :unprocessable_entity }
+    if @follow_request.recipient != current_user && @follow_request.sender != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    else
+      respond_to do |format|
+        if @follow_request.update(follow_request_params)
+          format.html { redirect_back fallback_location: root_url, notice: "Follow request was successfully updated." }
+          format.json { render :show, status: :ok, location: @follow_request }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @follow_request.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
   # DELETE /follow_requests/1 or /follow_requests/1.json
   def destroy
-    @follow_request.destroy
-    respond_to do |format|
-      format.html { redirect_back fallback_location: root_url, notice: "Follow request was successfully destroyed." }
-      format.json { head :no_content }
+    if @follow_request.recipient != current_user && @follow_request.sender != current_user
+      redirect_back fallback_location: root_url, alert: "nice try"
+    else
+      @follow_request.destroy
+      respond_to do |format|
+        format.html { redirect_back fallback_location: root_url, notice: "Follow request was successfully destroyed." }
+        format.json { head :no_content }
+      end
     end
   end
 
